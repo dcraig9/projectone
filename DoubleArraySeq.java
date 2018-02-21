@@ -65,6 +65,9 @@ public class DoubleArraySeq implements Cloneable
    public DoubleArraySeq( )
    {
       // Implemented by student.
+      data = new double[10];
+      manyItems=0;
+      currentIndex=0;
    }
      
 
@@ -86,6 +89,16 @@ public class DoubleArraySeq implements Cloneable
    **/   
    public DoubleArraySeq(int initialCapacity)
    {
+      if (initialCapacity >=0)
+      {
+         data=new double[initialCapacity];
+         manyItems=0;
+         currentIndex=0;
+      }
+      else
+      {
+         throw new IllegalArgumentException ("Negative capacity is not allowed.");
+      }
       // Implemented by student.
    }
         
@@ -109,9 +122,14 @@ public class DoubleArraySeq implements Cloneable
    *   Integer.MAX_VALUE will cause the sequence to fail with an
    *   arithmetic overflow.
    **/
-   public void addAfter(double element)
+   public void addAfter(double element)  // Implemented by student.
    {
-      // Implemented by student.
+      ensureCapacity(manyItems+1);
+      for (int loop=manyItems; loop>currentIndex; loop--)
+         data[loop]=data[loop-1];
+      data[currentIndex+1]=element;
+      manyItems++;
+      advance();
    }
 
 
@@ -134,9 +152,13 @@ public class DoubleArraySeq implements Cloneable
    *   Integer.MAX_VALUE will cause the sequence to fail with an
    *   arithmetic overflow.
    **/
-   public void addBefore(double element)
+   public void addBefore(double element) // Implemented by student.
    {
-      // Implemented by student.
+      ensureCapacity(manyItems+1);
+      for(int loop = manyItems; loop > currentIndex-1; loop--)
+         data[loop]=data[loop-1];
+      data[currentIndex] = element;
+      manyItems++;
    }
    
    
@@ -159,9 +181,13 @@ public class DoubleArraySeq implements Cloneable
    *   Integer.MAX_VALUE will cause an arithmetic overflow
    *   that will cause the sequence to fail.
    **/
-   public void addAll(DoubleArraySeq addend)
+   public void addAll(DoubleArraySeq addend) // Implemented by student.
    {
-      // Implemented by student.
+      ensureCapacity(manyItems + addend.manyItems);
+      System.arraycopy(addend.data, 0, data, manyItems, addend.manyItems);
+      manyItems += addend.manyItems;
+      currentIndex = manyItems - 1;
+      
    }   
    
    
@@ -182,7 +208,7 @@ public class DoubleArraySeq implements Cloneable
    **/
    public void advance( )
    {
-      // Implemented by student.
+      currentIndex++;
    }
    
    
@@ -241,7 +267,11 @@ public class DoubleArraySeq implements Cloneable
    **/   
    public static DoubleArraySeq concatenation(DoubleArraySeq s1, DoubleArraySeq s2)
    {
-      // Implemented by student.
+      DoubleArraySeq s3 = new DoubleArraySeq(s1.manyItems + s2.manyItems);
+      System.arraycopy(s1, 0, s3, 0, s1.manyItems);
+      System.arraycopy(s2, 0, s3, s1.manyItems, s2.manyItems);
+      s3.manyItems = (s1.manyItems + s2.manyItems);
+      return s3;
    }
 
 
@@ -258,7 +288,13 @@ public class DoubleArraySeq implements Cloneable
    **/
    public void ensureCapacity(int minimumCapacity)
    {
-      // Implemented by student.
+      double largerArray[];
+      if (data.length < minimumCapacity)
+      {
+         largerArray = new double[minimumCapacity];
+         System.arraycopy(data, 0, largerArray, 0, manyItems);
+      }
+      data = largerArray;
    }
 
    
@@ -272,7 +308,8 @@ public class DoubleArraySeq implements Cloneable
    **/
    public int getCapacity( )
    {
-      // Implemented by student.
+      int capacity = data.length;
+      return capacity;
    }
 
 
@@ -289,7 +326,10 @@ public class DoubleArraySeq implements Cloneable
    **/
    public double getCurrent( )
    {
-      // Implemented by student.
+      if(isCurrent() )
+         return data[currentIndex];
+      else
+         throw new IllegalStateException ("There is no current element.");
    }
 
 
@@ -303,7 +343,10 @@ public class DoubleArraySeq implements Cloneable
    **/
    public boolean isCurrent( )
    {
-      // Implemented by student.
+      boolean answer = false;
+      if(currentIndex <= data.length)
+         answer = true;
+      return answer;
    }
               
    /**
@@ -322,7 +365,15 @@ public class DoubleArraySeq implements Cloneable
    **/
    public void removeCurrent( )
    {
-      // Implemented by student.
+      if(currentIndex != manyItems)
+      {
+         for(int loop = currentIndex; loop<manyItems-1; loop++)
+            data[loop] = data[loop+1];
+         manyItems--;
+      }
+      else
+      {
+         throw new IllegalStateException ("There is no current element.");
    }
                  
    
@@ -334,7 +385,7 @@ public class DoubleArraySeq implements Cloneable
    **/ 
    public int size( )
    {
-      // Implemented by student.
+      return manyItems;
    }
    
    
@@ -348,7 +399,8 @@ public class DoubleArraySeq implements Cloneable
    **/ 
    public void start( )
    {
-      // Implemented by student.
+      if(data[0] != 0)       // or should it be: if(data[0] != null)
+         currentIndex = 0;
    }
    
    
@@ -373,5 +425,147 @@ public class DoubleArraySeq implements Cloneable
       }
    }
       
-}
+   // add new methods here
+   
+   
+   /**
+   * Add a number to the front of the sequence
+   * @param - value, the new element to be added to the sequence
+   * @postcondition
+   *   The new elemenet has been added to the front of the sequence
+	* and if the sequence was too short the size has been increased by 1.
+   * @exception OutOfMemoryError
+   *   Indicates insufficient memory for altering the capacity. 
+   **/
+   public void addFront(double value)
+   {
+      ensureCapacity(manyItems + 1);
+      if(data[0] != 0)
+      {
+         manyItems++;
+         for(int loop = manyItems; loop>=0; loop--)
+            data[loop] = data[loop-1];
+         data[0] = value;
+      }
+      else
+         data[0] = value;
+   }
+   
+   
+   /**
+   * Remove the front element of the sequence
+   * @param - none
+   * @postcondition
+   *   The front element has been removed and the sequence contains one less element
+   * @exception IllegalStateException
+   *   Indicates that there is no current element, so 
+   *   removeFront may not be called.  
+   **/
+   public void removeFront()
+   {
+      start();
+      if(currentIndex != manyItems)
+      {
+         for(int loop = currentIndex; loop<manyItems-1; loop++)
+            data[loop] = data[loop+1];
+         manyItems--;
+      }
+      else
+      {
+         throw new IllegalStateException ("There is no current element.");
+   } 
+
+   /**
+   * Add a number to the end of the sequence
+   * @param - value, the number to be added
+   * @postcondition
+   *   The number has been added to the end of the sequence and if
+	*   the sequence was too small the size has been increased by 1.
+   *   New element has been set as current element.
+   * @exception OutOfMemoryError
+   *   Indicates insufficient memory for altering the capacity. 
+   **/         
+   public void addEnd(double value)  
+   {
+      ensureCapacity(manyItems+1);
+      data[manyItems] = value;
+      manyItems++;
+      currentIndex = manyItems - 1;
+   }
+   
+   /**
+   * Set the current index to the last element of the sequence
+   * @param - none
+   * @postcondition
+   *   The last element is now the current element
+   * @exception IllegalStateException
+   *   Indicates the sequence is empty or does not contain any elements. 
+   **/   
+   public void setCurrentLast()
+   {
+      if(manyItems != 0)
+         currentIndex = manyItems - 1;
+      else
+      {
+         throw new IllegalStateException ("The sequence is empty or does not contain any elements");
+      }
+   }    
+
+   /**
+   * Set the current index to n and return the element at n
+   * @param - n
+	*		the index to be retrieved
+	* @precondition
+	*		n is not negative and the sequence contains at least n elements
+   * @postcondition
+   *   The current element is now n
+   * @exception IllegalStateException
+   *   Indicates the sequence is empty or n is greater than the sequence size. 
+   **/   
+   public double getElement(int n)
+   {
+      if (n<manyItems)
+      {
+         currentIndex=n;
+         return data[n];
+      }
+      else
+         throw new IllegalStateException ("Sequence is empty or does not contain that many elements.");
+      
+   }
+      
+
+   /**
+   * Sets the current index to n.
+   * @param - n, the new current index
+   * @postcondition
+   *   The current index is set to n.
+   * @exception IllegalStateException
+   *   Indicates the sequence is empty or n is larger than the sequence size. 
+   **/   
+   public void setCurrent(int n)
+   {
+      if(data[0] != 0 && n < manyItems)
+         currentIndex = n;
+      else
+         throw new IllegalStateException ("Sequence is empty or does not contain that many elements.");
+   }
+   
+   
+   
+   
+   public boolean equals(Object seq2)
+   {
+   
+   }
+   
+   public String toString( )
+   {
+   
+   }
+ 
+ 
+ 
+         
+} // end class
            
