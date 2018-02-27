@@ -64,7 +64,7 @@ public class DoubleArraySeq implements Cloneable
    **/   
    public DoubleArraySeq( )
    {
-      // Implemented by student.
+      
       data = new double[10];
       manyItems=0;
       currentIndex=0;
@@ -99,7 +99,6 @@ public class DoubleArraySeq implements Cloneable
       {
          throw new IllegalArgumentException ("Negative capacity is not allowed.");
       }
-      // Implemented by student.
    }
         
  
@@ -288,13 +287,14 @@ public class DoubleArraySeq implements Cloneable
    **/
    public void ensureCapacity(int minimumCapacity)
    {
-      double largerArray[];
+      double[ ] largerArray;
       if (data.length < minimumCapacity)
       {
          largerArray = new double[minimumCapacity];
          System.arraycopy(data, 0, largerArray, 0, manyItems);
+         data = largerArray;
       }
-      data = largerArray;
+      
    }
 
    
@@ -374,6 +374,7 @@ public class DoubleArraySeq implements Cloneable
       else
       {
          throw new IllegalStateException ("There is no current element.");
+      }
    }
                  
    
@@ -473,7 +474,8 @@ public class DoubleArraySeq implements Cloneable
       else
       {
          throw new IllegalStateException ("There is no current element.");
-   } 
+      }
+    } 
 
    /**
    * Add a number to the end of the sequence
@@ -556,12 +558,14 @@ public class DoubleArraySeq implements Cloneable
    
    public boolean equals(Object seq2)
    {
-   
+      boolean good=false;
+      return good;
    }
    
-   public String toString( )
+   public String toString(Object seq)
    {
-   
+      String output = new String();
+      return output;
    }
  
  
