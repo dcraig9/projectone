@@ -64,7 +64,6 @@ public class DoubleArraySeq implements Cloneable
    **/   
    public DoubleArraySeq( )
    {
-      
       data = new double[10];
       manyItems=0;
       currentIndex=0;
@@ -350,7 +349,7 @@ public class DoubleArraySeq implements Cloneable
          answer = true;
       return answer;
    }
-              
+               
    /**
    * Remove the current element from this sequence.
    * @param - none
@@ -428,7 +427,7 @@ public class DoubleArraySeq implements Cloneable
       }
    }
       
-   // add new methods here
+   // new methods added here
    
    
    /**
@@ -509,15 +508,15 @@ public class DoubleArraySeq implements Cloneable
    }    
 
    /**
-   * Set the current index to n and return the element at n
-   * @param - n
+   * Set the current index to num and return the element at num
+   * @param - num
 	*		the index to be retrieved
 	* @precondition
-	*		n is not negative and the sequence contains at least n elements
+	*		num is not negative and the sequence contains at least num elements
    * @postcondition
-   *   The current element is now n
+   *   The current element is now num
    * @exception IllegalStateException
-   *   Indicates the sequence is empty or n is greater than the sequence size. 
+   *   Indicates the sequence is empty or num is greater than the sequence size. 
    **/   
    public double getElement(int num)
    {
@@ -545,7 +544,13 @@ public class DoubleArraySeq implements Cloneable
    
    
    
-   
+   /**
+   * Compares two sequences to determine if they are of the same length, order and data.
+   * @param - seq2, the sequence being compared to the active sequence
+   * @postcondition
+   *   Boolean value returned.
+   *
+   **/
    public boolean equals(DoubleArraySeq seq2)
    {
       boolean good=false;
@@ -557,7 +562,17 @@ public class DoubleArraySeq implements Cloneable
       return good;
    }
    
-   
+   /**
+   * Replaces default toString method. Outputs all elements of a sequence in order separated by a space.
+   * @param - none
+   * @precondition
+   *   The sequence is not empty.
+   * @postcondition
+   *   The sequence was output with all elements in order seperated by a space.
+   * @exception IllegalStateException
+   *   Indicates the sequence is empty.
+   *
+   **/
    public String toString( )
    {
       String output = new String();
