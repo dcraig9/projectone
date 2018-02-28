@@ -123,7 +123,8 @@ public class DoubleArraySeq implements Cloneable
    **/
    public void addAfter(double element)  // Implemented by student.
    {
-      ensureCapacity(manyItems+1);
+      if(manyItems == data.length)
+         ensureCapacity((manyItems+1)*2);
       for (int loop=manyItems; loop>currentIndex; loop--)
          data[loop]=data[loop-1];
       data[currentIndex+1]=element;
@@ -153,7 +154,8 @@ public class DoubleArraySeq implements Cloneable
    **/
    public void addBefore(double element) // Implemented by student.
    {
-      ensureCapacity(manyItems+1);
+      if(manyItems == data.length)
+         ensureCapacity((manyItems+1)*2);
       for(int loop = manyItems; loop > currentIndex-1; loop--)
          data[loop]=data[loop-1];
       data[currentIndex] = element;
@@ -440,16 +442,13 @@ public class DoubleArraySeq implements Cloneable
    **/
    public void addFront(double value)
    {
-      ensureCapacity(manyItems + 1);
-      if(data[0] != 0)
-      {
-         manyItems++;
-         for(int loop = manyItems; loop>=0; loop--)
-            data[loop] = data[loop-1];
-         data[0] = value;
-      }
-      else
-         data[0] = value;
+      if(manyItems == data.length)
+         ensureCapacity((manyItems+1)*2);
+      currentIndex=0;
+      for(int loop = manyItems; loop>currentIndex; loop--)
+         data[loop] = data[loop-1];
+      data[currentIndex] = value;
+      manyItems++;
    }
    
    
@@ -489,10 +488,11 @@ public class DoubleArraySeq implements Cloneable
    **/         
    public void addEnd(double value)  
    {
-      ensureCapacity(manyItems+1);
+      if(manyItems == data.length)
+         ensureCapacity((manyItems+1)*2);
       data[manyItems] = value;
       manyItems++;
-      currentIndex = manyItems - 1;
+      setCurrent(manyItems-1);
    }
    
    /**
@@ -505,12 +505,7 @@ public class DoubleArraySeq implements Cloneable
    **/   
    public void setCurrentLast()
    {
-      if(manyItems != 0)
-         currentIndex = manyItems - 1;
-      else
-      {
-         throw new IllegalStateException ("The sequence is empty or does not contain any elements");
-      }
+      setCurrent(manyItems-1);
    }    
 
    /**
@@ -524,31 +519,26 @@ public class DoubleArraySeq implements Cloneable
    * @exception IllegalStateException
    *   Indicates the sequence is empty or n is greater than the sequence size. 
    **/   
-   public double getElement(int n)
+   public double getElement(int num)
    {
-      if (n<manyItems)
-      {
-         currentIndex=n;
-         return data[n];
-      }
-      else
-         throw new IllegalStateException ("Sequence is empty or does not contain that many elements.");
+      setCurrent(num);
+      return data[num];
       
    }
       
 
    /**
-   * Sets the current index to n.
-   * @param - n, the new current index
+   * Sets the current index to num.
+   * @param - num, the new current index
    * @postcondition
-   *   The current index is set to n.
+   *   The current index is set to num.
    * @exception IllegalStateException
-   *   Indicates the sequence is empty or n is larger than the sequence size. 
+   *   Indicates the sequence is empty or num is larger than the sequence size. 
    **/   
-   public void setCurrent(int n)
+   public void setCurrent(int num)
    {
-      if(data[0] != 0 && n < manyItems)
-         currentIndex = n;
+      if((manyItems != 0) && (num < manyItems))
+         currentIndex = num;
       else
          throw new IllegalStateException ("Sequence is empty or does not contain that many elements.");
    }
@@ -556,19 +546,33 @@ public class DoubleArraySeq implements Cloneable
    
    
    
-   public boolean equals(Object seq2)
+   public boolean equals(DoubleArraySeq seq2)
    {
       boolean good=false;
+      String temp1,temp2;
+      temp1=this.toString();
+      temp2=seq2.toString();
+      if (temp1.equals(temp2))
+         good=true;
       return good;
    }
    
-   public String toString(Object seq)
+   
+   public String toString( )
    {
       String output = new String();
+      if(manyItems != 0)
+      {
+         for (int loop=0;loop<manyItems;loop++)
+            output=output + getElement(loop) + " ";
+      }
+      else
+         output = " ";
+      
       return output;
    }
  
- 
+  
  
          
 } // end class
