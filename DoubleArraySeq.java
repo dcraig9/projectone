@@ -268,8 +268,8 @@ public class DoubleArraySeq implements Cloneable
    public static DoubleArraySeq concatenation(DoubleArraySeq s1, DoubleArraySeq s2)
    {
       DoubleArraySeq s3 = new DoubleArraySeq(s1.manyItems + s2.manyItems);
-      System.arraycopy(s1, 0, s3, 0, s1.manyItems);
-      System.arraycopy(s2, 0, s3, s1.manyItems, s2.manyItems);
+      System.arraycopy(s1.data, 0, s3.data, 0, s1.manyItems);
+      System.arraycopy(s2.data, 0, s3.data, s1.manyItems, s2.manyItems);
       s3.manyItems = (s1.manyItems + s2.manyItems);
       return s3;
    }
