@@ -1,4 +1,6 @@
 // File: DoubleArraySeq.java 
+// Project #1 for Data Structures class
+// Authors: Don Craig / Joseph Corvelli / Hussein Handan
 
 // This is an assignment for students to complete after reading Chapter 3 of
 // "Data Structures and Other Objects Using Java" by Michael Main.
